@@ -1,0 +1,9 @@
+digraph min_deterministic_finite_state_machine {
+	rankdir=LR
+	node [shape=doublecircle]
+	s1
+	node [shape=circle]
+	s1 -> s1 [label="a,b"]
+	node [shape=point]
+	"" -> s1
+}

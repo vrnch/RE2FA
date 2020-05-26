@@ -1,0 +1,44 @@
+@startuml
+class FA {
+    states : set
+    symbol : set
+    {field}transitions : defaultdict(defaultdict)
+    startstate : int
+    finalstates : list
+    setStart(state)
+    addFinal(state)
+    addTransition(fromstate, tostate, inputch)
+    addTransition_dict(transitions)
+    newBuildFromNumber(startnum)
+    newBuildFromEqualStates(equivalent, pos)
+    getEpsilonClosure(findstate)
+    getMove(state, skey)
+    display(fname, pname)
+}
+
+class Regex2NFA {
+    regex : str 
+    nfa : FA
+    displayNFA()
+    {static}getPriority(op)
+    {static}basicstruct(inputch)
+    {static}linestruct(a, b)
+    {static}dotstruct(a, b)
+    {static}starstruct(a)
+    buildNFA()
+}
+
+class NFA2DFA {
+    dfa : FA 
+    minDFA : FA 
+    displayDFA()
+    displayminDFA()
+    buildDFA(nfa)
+    reNumber(states, pos)
+    minimise()
+}
+
+FA o-- Regex2NFA
+FA o-- NFA2DFA
+
+@enduml

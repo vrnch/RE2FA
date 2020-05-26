@@ -19,17 +19,10 @@ activate Regex2NFA
             Regex2NFA -> Regex2NFA: linestruct()
             activate Regex2NFA 
 
-                Regex2NFA -> FA : newBuildFromNumber()
-                activate FA
-                    FA --> Regex2NFA : rebuild, startnum
-                deactivate FA
-                
-                Regex2NFA -> FA : newBuildFromNumber()
-                activate FA                
-                    FA --> Regex2NFA : rebuild, startnum
-                deactivate FA
-
                 Regex2NFA -> FA : init()
+                activate FA
+                    FA --> Regex2NFA : lineFA
+                deactivate FA
 
 
             deactivate Regex2NFA 
@@ -37,16 +30,6 @@ activate Regex2NFA
         else ch == dot
             Regex2NFA -> Regex2NFA: dotstruct()
             activate Regex2NFA
-
-                Regex2NFA -> FA : newBuildFromNumber()
-                activate FA
-                    FA --> Regex2NFA : rebuild, startnum
-                deactivate FA
-                
-                Regex2NFA -> FA : newBuildFromNumber()
-                activate FA                
-                    FA --> Regex2NFA : rebuild, startnum
-                deactivate FA
 
                 Regex2NFA -> FA: init()
                 activate FA
@@ -59,11 +42,6 @@ activate Regex2NFA
             Regex2NFA -> Regex2NFA : starstruct()
             activate Regex2NFA
 
-                Regex2NFA -> FA : newBuildFromNumber()
-                activate FA
-                    FA --> Regex2NFA : rebuild, startnum
-                deactivate FA
-
                 Regex2NFA -> FA : init()
                 activate FA
                     FA --> Regex2NFA : starFA
@@ -71,31 +49,53 @@ activate Regex2NFA
             deactivate Regex2NFA 
         end
     end
+    Regex2NFA --> Regex2NFA : self.**nfa**
 
 deactivate Regex2NFA
     
-Regex2NFA -> Regex2NFA : displayNFA()
+Main -> Regex2NFA : displayNFA()
 activate Regex2NFA
 
     Regex2NFA -> FA : display()
+    'activate Regex2NFA
         activate FA
-            FA --> Regex2NFA : nfa.gv.png
+            FA --> "hard drive" : nfa.gv.png
+    'deactivate Regex2NFA
         deactivate FA
-
 deactivate Regex2NFA
+deactivate Regex2NFA
+
 
 Main -> NFA2DFA : init()
 activate NFA2DFA
     NFA2DFA -> NFA2DFA : buildDFA()
     activate NFA2DFA
-        NFA2DFA -> NFA2DFA : getEpsilonClosure()
         NFA2DFA -> FA : init()
         activate FA
-            FA --> NFA2DFA 
+            FA --> NFA2DFA : self.**dfa**
         deactivate FA
     deactivate NFA2DFA
-
-
 deactivate NFA2DFA
 
+    Main -> NFA2DFA : displayDFA()
+    activate NFA2DFA
+        NFA2DFA -> FA : display()
+        activate FA
+            FA --> "hard drive" : dfa.gv.png
+        deactivate FA
+    deactivate NFA2DFA
+deactivate NFA2DFA
+
+Main -> NFA2DFA : minimize()
+activate NFA2DFA
+    NFA2DFA --> NFA2DFA : self.**minDFA**
+deactivate NFA2DFA
+
+Main -> NFA2DFA : displayminDFA()
+activate NFA2DFA
+    NFA2DFA --> FA : display()
+    activate FA
+        FA --> "hard drive" : mindfa.gv.png
+    deactivate FA
+deactivate NFA2DFA
 @enduml

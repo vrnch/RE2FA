@@ -1,0 +1,101 @@
+@startuml
+Main -> Regex2NFA: init()
+activate Regex2NFA
+
+    Regex2NFA -> Regex2NFA: buildNFA()
+    activate Regex2NFA
+
+    loop ch in self.regex
+        alt ch in alphabet
+            Regex2NFA -> Regex2NFA: basicstruct()
+            activate Regex2NFA 
+                Regex2NFA -> FA : init()
+                activate FA
+                    FA --> Regex2NFA : basic
+                deactivate FA
+            deactivate Regex2NFA     
+
+        else ch == line
+            Regex2NFA -> Regex2NFA: linestruct()
+            activate Regex2NFA 
+
+                Regex2NFA -> FA : newBuildFromNumber()
+                activate FA
+                    FA --> Regex2NFA : rebuild, startnum
+                deactivate FA
+                
+                Regex2NFA -> FA : newBuildFromNumber()
+                activate FA                
+                    FA --> Regex2NFA : rebuild, startnum
+                deactivate FA
+
+                Regex2NFA -> FA : init()
+
+
+            deactivate Regex2NFA 
+        
+        else ch == dot
+            Regex2NFA -> Regex2NFA: dotstruct()
+            activate Regex2NFA
+
+                Regex2NFA -> FA : newBuildFromNumber()
+                activate FA
+                    FA --> Regex2NFA : rebuild, startnum
+                deactivate FA
+                
+                Regex2NFA -> FA : newBuildFromNumber()
+                activate FA                
+                    FA --> Regex2NFA : rebuild, startnum
+                deactivate FA
+
+                Regex2NFA -> FA: init()
+                activate FA
+                    FA --> Regex2NFA: dotFA
+                deactivate FA
+
+            deactivate Regex2NFA
+
+        else ch == star 
+            Regex2NFA -> Regex2NFA : starstruct()
+            activate Regex2NFA
+
+                Regex2NFA -> FA : newBuildFromNumber()
+                activate FA
+                    FA --> Regex2NFA : rebuild, startnum
+                deactivate FA
+
+                Regex2NFA -> FA : init()
+                activate FA
+                    FA --> Regex2NFA : starFA
+                deactivate FA
+            deactivate Regex2NFA 
+        end
+    end
+
+deactivate Regex2NFA
+    
+Regex2NFA -> Regex2NFA : displayNFA()
+activate Regex2NFA
+
+    Regex2NFA -> FA : display()
+        activate FA
+            FA --> Regex2NFA : nfa.gv.png
+        deactivate FA
+
+deactivate Regex2NFA
+
+Main -> NFA2DFA : init()
+activate NFA2DFA
+    NFA2DFA -> NFA2DFA : buildDFA()
+    activate NFA2DFA
+        NFA2DFA -> NFA2DFA : getEpsilonClosure()
+        NFA2DFA -> FA : init()
+        activate FA
+            FA --> NFA2DFA 
+        deactivate FA
+    deactivate NFA2DFA
+
+
+deactivate NFA2DFA
+
+@enduml

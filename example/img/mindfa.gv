@@ -3,7 +3,7 @@ digraph min_deterministic_finite_state_machine {
 	node [shape=doublecircle]
 	s1
 	node [shape=circle]
-	s1 -> s1 [label="a,b"]
+	s1 -> s1 [label="b,a"]
 	node [shape=point]
 	"" -> s1
 }

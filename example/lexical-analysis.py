@@ -277,7 +277,7 @@ class NFA2DFA:
         allstates[cnt] = state1
         cnt += 1
         while len(states):
-            [state, fromindex] = states.pop()
+            state, fromindex = states.pop()
             for ch in dfa.symbol:
                 trstates = nfa.getMove(state, ch)
                 for s in list(trstates):    # 转化为list, 相当于使用了一个临时变量

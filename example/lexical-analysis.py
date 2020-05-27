@@ -26,26 +26,26 @@ class FA:
             if s not in self.accepting_states:
                 self.accepting_states.append(s)
 
-    def add_transition(self, fromstate, tostate, inputch):   
+    def add_transition(self, from_state, to_state, symbol):   
         """
         Add only one mapping transition
         """
-        if isinstance(inputch, str):
-            inputch = set([inputch])
-        self.states.add(fromstate)
-        self.states.add(tostate)
-        if fromstate in self.transitions and tostate in self.transitions[fromstate]:
-            self.transitions[fromstate][tostate] = self.transitions[fromstate][tostate].union(inputch)
+        if isinstance(symbol, str):
+            symbol = set([symbol])
+        self.states.add(from_state)
+        self.states.add(to_state)
+        if from_state in self.transitions and to_state in self.transitions[from_state]:
+            self.transitions[from_state][to_state] = self.transitions[from_state][to_state].union(symbol)
         else:
-            self.transitions[fromstate][tostate] = inputch
+            self.transitions[from_state][to_state] = symbol
 
     def add_transition_dict(self, transitions): 
         """
         Add the contents of one dictionary to another dictionary
         """
-        for fromstate, tostates in transitions.items():
-            for state in tostates:
-                self.add_transition(fromstate, state, tostates[state])
+        for from_state, to_states in transitions.items():
+            for state in to_states:
+                self.add_transition(from_state, state, to_states[state])
 
     def rebuild_from_number(self, start_number):
         """
@@ -68,7 +68,6 @@ class FA:
         return rebuild, start_number
 
     def rebuild_from_equal_states(self, equivalent, position):
-        # Reset states' number after merging
         """
         Reset the state representation number after minimizing the merged state
         """
@@ -82,16 +81,16 @@ class FA:
         return rebuilt
 
     def get_epsilon_closure(self, find_state):
-        all_states = set()
+        epsilon_closure = set()
         states = [find_state]
         while len(states):
             from_state = states.pop()
-            all_states.add(from_state)
+            epsilon_closure.add(from_state)
             if from_state in self.transitions:
                 for to_state in self.transitions[from_state]:
-                    if EPSILON in self.transitions[from_state][to_state] and to_state not in all_states:
+                    if EPSILON in self.transitions[from_state][to_state] and to_state not in epsilon_closure:
                         states.append(to_state)
-        return all_states
+        return epsilon_closure
 
     def get_move(self, state, skey):
         if isinstance(state, int):

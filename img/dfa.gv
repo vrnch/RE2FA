@@ -5,12 +5,12 @@ digraph deterministic_finite_automaton {
 	s2
 	s3
 	node [shape=circle]
-	s1 -> s2 [label=b]
-	s1 -> s3 [label=a]
-	s3 -> s2 [label=b]
-	s3 -> s3 [label=a]
-	s2 -> s2 [label=b]
-	s2 -> s3 [label=a]
+	s1 -> s2 [label=a]
+	s1 -> s3 [label=b]
+	s3 -> s2 [label=a]
+	s3 -> s3 [label=b]
+	s2 -> s2 [label=a]
+	s2 -> s3 [label=b]
 	node [shape=point]
 	"" -> s1
 }

@@ -3,7 +3,7 @@ digraph minimal_deterministic_finite_automaton {
 	node [shape=doublecircle]
 	s1
 	node [shape=circle]
-	s1 -> s1 [label="b,a"]
+	s1 -> s1 [label="a,b"]
 	node [shape=point]
 	"" -> s1
 }

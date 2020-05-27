@@ -1,112 +1,115 @@
 # source: https://github.com/YanhuiJessica/Finite-Automata-Machine
-# sequence diagram: http://www.plantuml.com/plantuml/uml/lPN1JW8n48RlVOe95xM973YIO30XtlJW6vJj04swosQtIzIdTmgRIGE3RTJGWrhx_pFJRoPTjUo3wS9GU_LgN0EFJ_2EM_oOlRqypy4rBjm_A5C5Tp01WO-K0bgyFREj1-Sj_KNMABjcz_jz2zMEia2FVZFLkei2hHMCo_Wm2enlTsQDWOz-p6zwL_MX6oggdXroAS3dObJwoHZYeHYCBWJ2YX7Imc2ix49iKGuLJuIAur8iGzzZXBHOW7SD5W6Amc8-DmKKAqlL8Y6LPyGAYPFTbyqHwGefPI7z2oEkAaSe3qYSd_WKG04Pc1-bvMnkCq1SM1PF-VXWOrNocoL2ujCJrcoCrag9p85M-ioorxg-zUQJDgMlRMeRmTq9HWca072oCvq5sxa3JYWktM6wFKpRPdiAB5v69YjAvG5a4hIRhT8nOFLu4dEnAZ6CNveLVsb48vlbUSlZOJStsHwRV7ssB5vK8lphA3s7m5qjlvKy3x_ek-M-__bkGdDhWbwxBymqM2PEPjfhNPIBIPnSsOGIFvcTp8tI9EWkiGarBx6nG-s_0G00
+# sequence diagram: http://www.plantuml.com/plantuml/umla/nPRDRXiX483lF0MtsAlMXnmjfKfLjxVqKAaFW9U9ZOHX1QpLzEdBO4H9m8LLssGF6o_p_mqCkRUE6JUV925iTDhGxnOCmHTz_u4-CA7ebffPqL4hgoLGDas4u3hAly41Vjn-_V9nIuKIRcNmUusUn9av-2qdXFedVRwmtSz2SlzhjGvgryobrXCTZpuKjI0VDo5Qa0GhwQAGoUd8zk2Iw8-ncHMZTMOU7OQFJpqDckHLh_uTEIH7fJDV3Aqyw25FZCRCgih58eV2Vo79V0SVIGsa1IHtTqUbKD153HMxeRqgDSmiqwuJ8cr6IQF6YUk-pUNrEYar8VqpHY6h5g4seEh-mM52EyZGRL3jPFEw6mWJQ-BftpwWECd_9fKoCCwqOL2FR1W8gJA_teXo97kFNDX9iYUSh9r3EJUBE6ygXYsy5sSxSJ1iEjQxaqoZLW4yhWTCuJxQKezcSpXl9dKe6r0wkwdIglPp2Ur4sd_TxlBDbxIZ16CbhSmWNdYxTE5L3LyO1xkuEpO7S9ydAwHMdwIsiu4LeWbNkNyvM7Trw5bAJCfWQgyGgkMK5n_awPQMe5ONTrdNdr_X73D-Eksrp3IQPJ_eCrmyl_D-5X_uicvdOjdz1puLOh4EAQnRELEhDl_Nn5Ab7Uh3U6bPeRcywVLmJGuBzq4_c7pcjTRYT_fD6bisSYdoZLEJXwbvFKKEnI6hB0NLydp7WTX_OCjH-bOZa_UEpBzdLt8x-I9EuYSqPsEjezxOVmz3Pwn8-cBL3bZsf-pDV-mBebdMccovplyU59zFyXS0
 # class diagram: http://www.plantuml.com/plantuml/uml/TL6xijem4Etz5IgL6MWeKq42xi9aGlgCRAt9JlGmqeh4m_3laInXH78l3TQUe_FGRZq9Hq6hfbV2UzRksArXyHVd19vzP1ue3oRTMLKDRWE2adTomdWaj2Qn9GmYA9BO4w--Fpmq7St2aOacomneX5hS5FfY1tHAT3v3-RwGiatiVsRVbmHyS5RFu8gHBHzena3zppVeF-QOLO7CCV3xKq0bsoXs3Be3n-Va9kZ_2OTB4Eeqn-Tm2NWL2Wojs6YBsXdeC7fKrdnMrWS7F3QMfK4XVB5Nu2Mk_mLJ1YJwKOc93qRe28pnBrwvDsLLt-0CVpR7PMCkdTD-oB4SSn3nsEvgiKZdMVsM_B2_H_kl3gr3chWTNx5EUEoZNkY9ByzO4nGQABXOiUuLb9RUnTA3Fi2CTEb5SxobOZnkzaj1MVhaTXfDXAf1QRXF4lKW4tdbaevcABuEdZicy6LpnG4rUiY9eerThv-l_XYKZ4sp1IE3Ldy1
 from collections import defaultdict
 from graphviz import Digraph, render
 
-star = '*'
-line = '|'
-dot = '·'
-leftBracket, rightBracket = '(', ')'
-alphabet = [chr(i) for i in range(ord('A'), ord('Z') + 1)] + \
-    [chr(i) for i in range(ord('a'), ord('z') + 1)] + \
-    [chr(i) for i in range(ord('0'), ord('9') + 1)]
-epsilon = 'ε'
+from constants import *
 
 class FA:
 
-    def __init__(self, symbol = set([])):
+    def __init__(self, symbol = set(list())):
         self.states = set()
-        self.symbol = symbol    # input symbol 输入符号表
+        self.symbol = symbol    # Input symbol table
         self.transitions = defaultdict(defaultdict)
-        self.startstate = None
-        self.finalstates = []
+        self.initial_state = None
+        self.accepting_states = list()
 
-    def setStart(self, state):
-        self.startstate = state
+    def set_initial_state(self, state):
+        self.initial_state = state
         self.states.add(state)
 
-    def addFinal(self, state):
+    def add_accepting_states(self, state):
         if isinstance(state, int):
             state = [state]
         for s in state:
-            if s not in self.finalstates:
-                self.finalstates.append(s)
+            if s not in self.accepting_states:
+                self.accepting_states.append(s)
 
-    def addTransition(self, fromstate, tostate, inputch):   # add only one 仅添加一条映射关系
+    def add_transition(self, fromstate, tostate, inputch):   
+        """
+        Add only one mapping transition
+        """
         if isinstance(inputch, str):
             inputch = set([inputch])
         self.states.add(fromstate)
         self.states.add(tostate)
         if fromstate in self.transitions and tostate in self.transitions[fromstate]:
-            self.transitions[fromstate][tostate] = \
-            self.transitions[fromstate][tostate].union(inputch)
+            self.transitions[fromstate][tostate] = self.transitions[fromstate][tostate].union(inputch)
         else:
             self.transitions[fromstate][tostate] = inputch
 
-    def addTransition_dict(self, transitions):  # add dict to dict 将一个字典的内容添加到另一个字典
+    def add_transition_dict(self, transitions): 
+        """
+        Add the contents of one dictionary to another dictionary
+        """
         for fromstate, tostates in transitions.items():
             for state in tostates:
-                self.addTransition(fromstate, state, tostates[state])
+                self.add_transition(fromstate, state, tostates[state])
 
-    def newBuildFromNumber(self, startnum):
-    # change the states' representing number to start with the given startnum
-    # 改变各状态的表示数字，使之从 startnum 开始
+    def rebuild_from_number(self, start_number):
+        """
+        Reset the representation number of each state as start from the given start_number
+        """
         translations = {}
-        for i in self.states:
-            translations[i] = startnum
-            startnum += 1
+        for state in self.states:
+            translations[state] = start_number
+            start_number += 1
         rebuild = FA(self.symbol)
-        rebuild.setStart(translations[self.startstate])
-        rebuild.addFinal(translations[self.finalstates[0]])
-        # 多个终结状态不方便合并操作, 同时提供的合并操作可以保证只产生一个终结状态
-        for fromstate, tostates in self.transitions.items():
-            for state in tostates:
-                rebuild.addTransition(translations[fromstate], translations[state], tostates[state])
-        return [rebuild, startnum]
+        rebuild.set_initial_state(translations[self.initial_state])
+        rebuild.add_accepting_states(translations[self.accepting_states[0]])
+        """
+        Multiple accepting states are not easy to merge, and the provided merge 
+        operation ensures that only one accepting state is generated
+        """
+        for from_state, to_states in self.transitions.items():
+            for state in to_states:
+                rebuild.add_transition(translations[from_state], translations[state], to_states[state])
+        return rebuild, start_number
 
-    def newBuildFromEqualStates(self, equivalent, pos):
-        # change states' number after merging
-        # 在最小化合并状态后修改状态的表示数字
-        rebuild = FA(self.symbol)
-        for fromstate, tostates in self.transitions.items():
-            for state in tostates:
-                rebuild.addTransition(pos[fromstate], pos[state], tostates[state])
-        rebuild.setStart(pos[self.startstate])
-        for s in self.finalstates:
-            rebuild.addFinal(pos[s])
-        return rebuild
+    def rebuild_from_equal_states(self, equivalent, position):
+        # Reset states' number after merging
+        """
+        Reset the state representation number after minimizing the merged state
+        """
+        rebuilt = FA(self.symbol)
+        for from_state, to_states in self.transitions.items():
+            for state in to_states:
+                rebuilt.add_transition(position[from_state], position[state], to_states[state])
+        rebuilt.set_initial_state(position[self.initial_state])
+        for state in self.accepting_states:
+            rebuilt.add_accepting_states(position[state])
+        return rebuilt
 
-    def getEpsilonClosure(self, findstate):
-        allstates = set()
-        states = [findstate]
+    def get_epsilon_closure(self, find_state):
+        all_states = set()
+        states = [find_state]
         while len(states):
-            state = states.pop()
-            allstates.add(state)
-            if state in self.transitions:
-                for tos in self.transitions[state]:
-                    if epsilon in self.transitions[state][tos] and \
-                        tos not in allstates:
-                        states.append(tos)
-        return allstates
+            from_state = states.pop()
+            all_states.add(from_state)
+            if from_state in self.transitions:
+                for to_state in self.transitions[from_state]:
+                    if EPSILON in self.transitions[from_state][to_state] and to_state not in all_states:
+                        states.append(to_state)
+        return all_states
 
-    def getMove(self, state, skey):
+    def get_move(self, state, skey):
         if isinstance(state, int):
             state = [state]
-        trstates = set()
-        for st in state:
-            if st in self.transitions:
-                for tns in self.transitions[st]:
-                    if skey in self.transitions[st][tns]:
-                        trstates.add(tns)
-        return trstates
+        transition_states = set()
+        for s in state:
+            if s in self.transitions:
+                for transition in self.transitions[s]:
+                    if skey in self.transitions[s][transition]:
+                        transition_states.add(transition)
+        return transition_states
 
     def display(self, fname, pname):
         fa = Digraph(pname, filename = fname, format = 'png')
         fa.attr(rankdir='LR')
 
         fa.attr('node', shape = 'doublecircle')
-        for fst in self.finalstates:
+        for fst in self.accepting_states:
             fa.node('s' + str(fst))
 
         fa.attr('node', shape = 'circle')
@@ -118,117 +121,137 @@ class FA:
                 fa.edge('s' + str(fromstate), 's' + str(state), label = tmp[:-1])
 
         fa.attr('node', shape = 'point')
-        fa.edge('', 's' + str(self.startstate))
+        fa.edge('', 's' + str(self.initial_state))
 
-        fa.view(directory="./example/img")
+        fa.view(directory="./img")
 
 class Regex2NFA:
 
     def __init__(self, regex):
         self.regex = regex
-        self.buildNFA()
+        self.build_NFA()
 
-    def displayNFA(self):
-        self.nfa.display('nfa.gv', 'nondeterministic_finite_state_machine')
+    def display_NFA(self):
+        self.nfa.display('nfa.gv', 'nondeterministic_finite_automaton')
 
     @staticmethod
-    def getPriority(op):
-        if op == line:
+    def get_precedence(operator):
+        if operator == ALTERNATION:
             return 1
-        elif op == dot:
+        elif operator == CONCATENATION:
             return 2
-        elif op == star:
+        elif operator == KLEENE_CLOSURE:
             return 3
         else:       # left bracket 左括号
             return 0
 
     @staticmethod
-    def basicstruct(inputch):   # Regex = a -> NFA
-        state1 = 1
-        state2 = 2
-        basic = FA(set([inputch]))
-        basic.setStart(state1)
-        basic.addFinal(state2)
-        basic.addTransition(state1, state2, inputch)
-        return basic
+    def get_symbol_template(symbol):  
+        """
+        symbol -> NFA
+        """
+        from_state = 1
+        to_state = 2
+        symbol_template = FA(set([symbol]))
+        symbol_template.set_initial_state(from_state)
+        symbol_template.add_accepting_states(to_state)
+        symbol_template.add_transition(from_state, to_state, symbol)
+        return symbol_template
 
     @staticmethod
-    def linestruct(a, b):   # Regex = a | b -> NFA
-        [a, m1] = a.newBuildFromNumber(2)
-        [b, m2] = b.newBuildFromNumber(m1)
-        state1 = 1
-        state2 = m2
-        lineFA = FA(a.symbol.union(b.symbol))
-        lineFA.setStart(state1)
-        lineFA.addFinal(state2)
-        lineFA.addTransition(lineFA.startstate, a.startstate, epsilon)
-        lineFA.addTransition(lineFA.startstate, b.startstate, epsilon)
-        lineFA.addTransition(a.finalstates[0], lineFA.finalstates[0], epsilon)
-        lineFA.addTransition(b.finalstates[0], lineFA.finalstates[0], epsilon)
-        lineFA.addTransition_dict(a.transitions)
-        lineFA.addTransition_dict(b.transitions)
-        return lineFA
+    def get_alternation_template(a, b):  
+        """
+        a | b -> NFA
+        """
+        a, m1 = a.rebuild_from_number(2)
+        b, m2 = b.rebuild_from_number(m1)
+        from_state = 1
+        to_state = m2
+        alternation_template = FA(a.symbol.union(b.symbol))
+        alternation_template.set_initial_state(from_state)
+        alternation_template.add_accepting_states(to_state)
+        alternation_template.add_transition(alternation_template.initial_state, a.initial_state, EPSILON)
+        alternation_template.add_transition(alternation_template.initial_state, b.initial_state, EPSILON)
+        alternation_template.add_transition(a.accepting_states[0], alternation_template.accepting_states[0], EPSILON)
+        alternation_template.add_transition(b.accepting_states[0], alternation_template.accepting_states[0], EPSILON)
+        alternation_template.add_transition_dict(a.transitions)
+        alternation_template.add_transition_dict(b.transitions)
+        return alternation_template
 
     @staticmethod
-    def dotstruct(a, b):    # Regex = a · b -> NFA
-        [a, m1] = a.newBuildFromNumber(1)
-        [b, m2] = b.newBuildFromNumber(m1)
-        state1 = 1
-        state2 = m2 - 1
-        dotFA = FA(a.symbol.union(b.symbol))
-        dotFA.setStart(state1)
-        dotFA.addFinal(state2)
-        dotFA.addTransition(a.finalstates[0], b.startstate, epsilon)
-        dotFA.addTransition_dict(a.transitions)
-        dotFA.addTransition_dict(b.transitions)
-        return dotFA
+    def get_concatenation_template(a, b):  
+        """
+        a · b -> NFA
+        """
+        a, m1 = a.rebuild_from_number(1)
+        b, m2 = b.rebuild_from_number(m1)
+        from_state = 1
+        to_state = m2 - 1
+        concatenation_template = FA(a.symbol.union(b.symbol))
+        concatenation_template.set_initial_state(from_state)
+        concatenation_template.add_accepting_states(to_state)
+        concatenation_template.add_transition(a.accepting_states[0], b.initial_state, EPSILON)
+        concatenation_template.add_transition_dict(a.transitions)
+        concatenation_template.add_transition_dict(b.transitions)
+        return concatenation_template
 
     @staticmethod
-    def starstruct(a):  # Regex = a* -> NFA
-        [a, m1] = a.newBuildFromNumber(2)
-        state1 = 1
-        state2 = m1
-        starFA = FA(a.symbol)
-        starFA.setStart(state1)
-        starFA.addFinal(state2)
-        starFA.addTransition(starFA.startstate, a.startstate, epsilon)
-        starFA.addTransition(starFA.startstate, starFA.finalstates[0], epsilon)
-        starFA.addTransition(a.finalstates[0], starFA.finalstates[0], epsilon)
-        starFA.addTransition(a.finalstates[0], a.startstate, epsilon)
-        starFA.addTransition_dict(a.transitions)
-        return starFA
+    def get_kleene_closure_template(a): 
+        """
+        a* -> NFA
+        """
+        a, m1 = a.rebuild_from_number(2)
+        from_state = 1
+        to_state = m1
+        kleene_closure_template = FA(a.symbol)
+        kleene_closure_template.set_initial_state(from_state)
+        kleene_closure_template.add_accepting_states(to_state)
+        kleene_closure_template.add_transition(kleene_closure_template.initial_state, a.initial_state, EPSILON)
+        kleene_closure_template.add_transition(kleene_closure_template.initial_state, kleene_closure_template.accepting_states[0], EPSILON)
+        kleene_closure_template.add_transition(a.accepting_states[0], kleene_closure_template.accepting_states[0], EPSILON)
+        kleene_closure_template.add_transition(a.accepting_states[0], a.initial_state, EPSILON)
+        kleene_closure_template.add_transition_dict(a.transitions)
+        return kleene_closure_template
 
-    def buildNFA(self):
+    #@staticmethod
+    def to_postfix(self) :
+        pass
+
+    def build_NFA(self):
         tword = ''
-        pre = ''
+        previous = ''
         symbol = set()
 
-        # explicitly add dot to the expression 显式地为正则式添加连接符
+        """
+        Explicitly add concatenation to the expression 
+        """
         for ch in self.regex:
-            if ch in alphabet:
+            if ch in ALPHABET:
                 symbol.add(ch)
-            if ch in alphabet or ch == leftBracket:
-                if pre != dot and (pre in alphabet or pre in [star, rightBracket]):
-                    tword += dot
+            if ch in ALPHABET or ch == LEFT_PARENTHESES:
+                if previous != CONCATENATION and (previous in ALPHABET or previous in [KLEENE_CLOSURE, RIGHT_PARENTHESES]):
+                    tword += CONCATENATION
             tword += ch
-            pre = ch
+            previous = ch
         self.regex = tword
 
-        # convert infix expression to postfix expression 将中缀表达式转换为后缀表达式
+        """
+        Convert infix expression to postfix expression
+        """ 
         tword = ''
-        stack = []
+        stack = list()
         for ch in self.regex:
-            if ch in alphabet:
+            if ch in ALPHABET:
                 tword += ch
-            elif ch == leftBracket:
+            elif ch == LEFT_PARENTHESES:
                 stack.append(ch)
-            elif ch == rightBracket:
-                while(stack[-1] != leftBracket):
+            elif ch == RIGHT_PARENTHESES:
+                while(stack[-1] != LEFT_PARENTHESES):
                     tword += stack[-1]
                     stack.pop()
-                stack.pop()    # pop left bracket 弹出左括号
+                stack.pop()    # pop left bracket
             else:
-                while(len(stack) and Regex2NFA.getPriority(stack[-1]) >= Regex2NFA.getPriority(ch)):
+                while(len(stack) and Regex2NFA.get_precedence(stack[-1]) >= Regex2NFA.get_precedence(ch)):
                     tword += stack[-1]
                     stack.pop()
                 stack.append(ch)
@@ -236,67 +259,72 @@ class Regex2NFA:
             tword += stack.pop()
         self.regex = tword
 
-        # build ε-NFA from postfix expression 由后缀表达式构建ε-NFA
-        self.automata = []
+        """ 
+        Build ε-NFA from postfix expression
+        """ 
+        self.automata = list()
         for ch in self.regex:
-            if ch in alphabet:
-                self.automata.append(Regex2NFA.basicstruct(ch))
-            elif ch == line:
+            if ch in ALPHABET:
+                self.automata.append(Regex2NFA.get_symbol_template(ch))
+            elif ch == ALTERNATION:
                 b = self.automata.pop()
                 a = self.automata.pop()
-                self.automata.append(Regex2NFA.linestruct(a, b))
-            elif ch == dot:
+                self.automata.append(Regex2NFA.get_alternation_template(a, b))
+            elif ch == CONCATENATION:
                 b = self.automata.pop()
                 a = self.automata.pop()
-                self.automata.append(Regex2NFA.dotstruct(a, b))
-            elif ch == star:
+                self.automata.append(Regex2NFA.get_concatenation_template(a, b))
+            elif ch == KLEENE_CLOSURE:
                 a = self.automata.pop()
-                self.automata.append(Regex2NFA.starstruct(a))
+                self.automata.append(Regex2NFA.get_kleene_closure_template(a))
         self.nfa = self.automata.pop()
         self.nfa.symbol = symbol
 
 class NFA2DFA:
 
     def __init__(self, nfa):
-        self.buildDFA(nfa)
+        self.build_DFA(nfa)
 
-    def displayDFA(self):
-        self.dfa.display('dfa.gv', 'deterministic_finite_state_machine')
+    def display_DFA(self):
+        self.dfa.display('dfa.gv', 'deterministic_finite_automaton')
 
-    def displayminDFA(self):
-        self.minDFA.display('mindfa.gv', 'min_deterministic_finite_state_machine')
+    def display_minDFA(self):
+        self.minDFA.display('mindfa.gv', 'minimal_deterministic_finite_automaton')
 
-    def buildDFA(self, nfa):    # subset method 子集法
-        allstates = dict()  # visited subset
-        eclosure = dict()   # every state's ε-closure
-        state1 = nfa.getEpsilonClosure(nfa.startstate)
-        eclosure[nfa.startstate] = state1
-        cnt = 1 # the number of subset, dfa state id
+    def build_DFA(self, nfa): 
+        """
+        Subset construction
+        """
+        all_states = dict()  # visited subset
+        epsilon_closure = dict()   # every state's ε-closure
+        state1 = nfa.get_epsilon_closure(nfa.initial_state)
+        epsilon_closure[nfa.initial_state] = state1
+        number_of_subset = 1 # the number of subset, dfa state id
         dfa = FA(nfa.symbol)
-        dfa.setStart(cnt)
-        states = [[state1, dfa.startstate]] # unvisit
-        allstates[cnt] = state1
-        cnt += 1
+        dfa.set_initial_state(number_of_subset)
+        states = [[state1, dfa.initial_state]] # unvisit
+        all_states[number_of_subset] = state1
+        number_of_subset += 1
         while len(states):
             state, fromindex = states.pop()
             for ch in dfa.symbol:
-                trstates = nfa.getMove(state, ch)
+                trstates = nfa.get_move(state, ch)
                 for s in list(trstates):    # 转化为list, 相当于使用了一个临时变量
-                    if s not in eclosure:
-                        eclosure[s] = nfa.getEpsilonClosure(s)
-                    trstates = trstates.union(eclosure[s])
+                    if s not in epsilon_closure:
+                        epsilon_closure[s] = nfa.get_epsilon_closure(s)
+                    trstates = trstates.union(epsilon_closure[s])
                 if len(trstates):
-                    if trstates not in allstates.values():
-                        states.append([trstates, cnt])
-                        allstates[cnt] = trstates
-                        toindex = cnt
-                        cnt += 1
+                    if trstates not in all_states.values():
+                        states.append([trstates, number_of_subset])
+                        all_states[number_of_subset] = trstates
+                        toindex = number_of_subset
+                        number_of_subset += 1
                     else:
-                        toindex = [k for k, v in allstates.items() if v  ==  trstates][0]
-                    dfa.addTransition(fromindex, toindex, ch)
-            for value, state in allstates.items():
-                if nfa.finalstates[0] in state:
-                    dfa.addFinal(value)
+                        toindex = [k for k, v in all_states.items() if v  ==  trstates][0]
+                    dfa.add_transition(fromindex, toindex, ch)
+            for value, state in all_states.items():
+                if nfa.accepting_states[0] in state:
+                    dfa.add_accepting_states(value)
         self.dfa = dfa
 
     @staticmethod
@@ -318,11 +346,11 @@ class NFA2DFA:
             for sy in self.dfa.symbol:
                 if st in tostate:
                     if sy in tostate[st]:
-                        tostate[st][sy] = tostate[st][sy].union(self.dfa.getMove(st, sy))
+                        tostate[st][sy] = tostate[st][sy].union(self.dfa.get_move(st, sy))
                     else:
-                        tostate[st][sy] = self.dfa.getMove(st, sy)
+                        tostate[st][sy] = self.dfa.get_move(st, sy)
                 else:
-                    tostate[st] = {sy : self.dfa.getMove(st, sy)}
+                    tostate[st] = {sy : self.dfa.get_move(st, sy)}
                 if len(tostate[st][sy]):
                     tostate[st][sy] = tostate[st][sy].pop()
                 else:
@@ -334,14 +362,14 @@ class NFA2DFA:
         # initialization 2 sets, nonterminal states and final states
         equal = {1: set(), 2: set()}
         for st in states:
-            if st not in self.dfa.finalstates:
+            if st not in self.dfa.accepting_states:
                 equal[1] = equal[1].union(set([st]))
                 pos[st] = 1
-        for fst in self.dfa.finalstates:
+        for fst in self.dfa.accepting_states:
             equal[2] = equal[2].union(set([fst]))
             pos[fst] = 2
 
-        unchecked = []
+        unchecked = list()
         cnt = 3 # the number of sets
         unchecked.extend([[equal[1], 1], [equal[2], 2]])
         while len(unchecked):
@@ -379,21 +407,21 @@ class NFA2DFA:
             self.minDFA = self.dfa
         else:
             NFA2DFA.reNumber(states, pos)
-            self.minDFA = self.dfa.newBuildFromEqualStates(equal, pos)
+            self.minDFA = self.dfa.rebuild_from_equal_states(equal, pos)
 
-    def Analysis(self, string):
+"""    def Analysis(self, string):
         string = string.replace('@', epsilon)
-        curst = self.dfa.startstate
+        curst = self.dfa.initial_state
         for ch in string:
             if ch == epsilon:
                 continue
-            st = list(self.dfa.getMove(curst, ch))
+            st = list(self.dfa.get_move(curst, ch))
             if len(st) == 0:
                 return False
             curst = st[0]
-        if curst in self.dfa.finalstates:
+        if curst in self.dfa.accepting_states:
             return True
-        return False
+        return False"""
 
 if __name__ == '__main__':
 
@@ -401,12 +429,12 @@ if __name__ == '__main__':
     #regex = input('Please input the regex: ')
     regex = "(a*|b*)*"
     a = Regex2NFA(regex)
-    a.displayNFA()
+    a.display_NFA()
 
     b = NFA2DFA(a.nfa)
-    b.displayDFA()
+    b.display_DFA()
     b.minimise()
-    b.displayminDFA()
+    b.display_minDFA()
 
     """while True:
         try:

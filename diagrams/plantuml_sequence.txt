@@ -1,5 +1,9 @@
 @startuml
-Main -> Regex2NFA: init()
+
+actor User
+User -> Main : run console app
+
+Main -> Regex2NFA: init(regex)
 activate Regex2NFA
 
     Regex2NFA -> Regex2NFA: buildNFA()
@@ -12,6 +16,7 @@ activate Regex2NFA
                 Regex2NFA -> FA : init()
                 activate FA
                     FA --> Regex2NFA : basic
+                    
                 deactivate FA
             deactivate Regex2NFA     
 
@@ -52,6 +57,8 @@ activate Regex2NFA
     Regex2NFA --> Regex2NFA : self.**nfa**
 
 deactivate Regex2NFA
+deactivate Regex2NFA
+
     
 Main -> Regex2NFA : displayNFA()
 activate Regex2NFA
@@ -59,7 +66,10 @@ activate Regex2NFA
     Regex2NFA -> FA : display()
     'activate Regex2NFA
         activate FA
-            FA --> "hard drive" : nfa.gv.png
+            FA -> Digraph : init()
+            activate Digraph
+                Digraph --> User : nfa.gv.png
+            deactivate Digraph
     'deactivate Regex2NFA
         deactivate FA
 deactivate Regex2NFA
@@ -70,9 +80,33 @@ Main -> NFA2DFA : init()
 activate NFA2DFA
     NFA2DFA -> NFA2DFA : buildDFA()
     activate NFA2DFA
-        NFA2DFA -> FA : init()
+        NFA2DFA -> FA : **nfa**.getEpsilonClosure(nfa.startstate)
         activate FA
-            FA --> NFA2DFA : self.**dfa**
+            FA --> NFA2DFA : allstates
+        deactivate FA
+
+        NFA2DFA -> FA : init()
+
+        loop len(states)
+            loop ch in dfa.symbol
+                NFA2DFA -> FA : **nfa**.getMove(state, ch)
+                activate FA
+                    FA --> NFA2DFA : trstates
+                deactivate FA
+                loop s in list(trstates)
+                    alt s not in eclosure
+                        NFA2DFA -> FA : **nfa**.getEpsilonClosure(s)
+                        activate FA
+                            FA --> NFA2DFA : allstates
+                        deactivate FA
+                    end
+                end
+            end
+        end
+
+
+        activate FA
+            NFA2DFA --> NFA2DFA : self.**dfa**
         deactivate FA
     deactivate NFA2DFA
 deactivate NFA2DFA
@@ -81,7 +115,10 @@ deactivate NFA2DFA
     activate NFA2DFA
         NFA2DFA -> FA : display()
         activate FA
-            FA --> "hard drive" : dfa.gv.png
+            FA -> Digraph : init()
+            activate Digraph
+                Digraph --> User : dfa.gv.png
+            deactivate Digraph
         deactivate FA
     deactivate NFA2DFA
 deactivate NFA2DFA
@@ -95,7 +132,10 @@ Main -> NFA2DFA : displayminDFA()
 activate NFA2DFA
     NFA2DFA --> FA : display()
     activate FA
-        FA --> "hard drive" : mindfa.gv.png
+        FA -> Digraph : init()
+            activate Digraph
+                Digraph --> User : mindfa.gv.png
+            deactivate Digraph
     deactivate FA
 deactivate NFA2DFA
 @enduml

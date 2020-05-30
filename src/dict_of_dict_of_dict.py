@@ -1,11 +1,7 @@
 trainsitions = {
     1 : {
-        2 : {
-            'b'
-        },
-        3 : {
-            'a'
-        }
+        2 : {'b'},
+        3 : {'a'}
     },
     2 : {
         2 : {'b'},
@@ -29,3 +25,10 @@ for from_state, to_state in trainsitions.items() :
     for state, symbol in to_state.items() :     
         print(f"{from_state} - {symbol} -> {state}")
 
+dfa_states = {
+    'q0' : {
+        'q3' : 0,
+        'q1' : 1
+    },
+    
+}

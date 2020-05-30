@@ -1,0 +1,27 @@
+@startuml
+title Minimal DFA Visualization
+
+
+autonumber 
+
+Main -> Regex2NFA : display_minDFA()
+activate Regex2NFA
+    Regex2NFA -> FA : display('mindfa.gv', 'minDFA')
+    activate FA 
+        FA -> Digraph : init(FA_name, filename, format)
+        activate Digraph
+            FA -> Digraph : Set direction of graph layout as left-to-right
+            loop state in accepting_states
+                FA -> Digraph : Denote accepting states
+            end
+            loop from_state, to_states in transitions
+                FA -> Digraph : Denote transitions
+            end 
+            FA -> Digraph : Denote an arrow to the initial state
+
+            FA -> Digraph : Set default directory for images storing
+            actor User
+            Digraph --> User : Minimal DFA graph diagram in .png format
+        deactivate Digraph
+    deactivate FA
+@enduml

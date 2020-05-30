@@ -1,0 +1,15 @@
+@startuml
+title DFA Minimization
+
+participant Main
+participant NFA2DFA
+participant FA
+
+autonumber
+
+Main -> NFA2DFA : minimize()
+activate NFA2DFA
+    
+deactivate NFA2DFA
+
+@enduml 

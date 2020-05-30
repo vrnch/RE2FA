@@ -7,7 +7,9 @@ from graphviz import Digraph, render
 from constants import EPSILON
 
 class FA:
-
+    """
+    Finite Automaton
+    """
     def __init__(self, symbols = set(list())):
         self.states = set()
         self.symbols = symbols    # Input symbol table
@@ -81,25 +83,31 @@ class FA:
         return rebuilt
 
     def get_epsilon_closure(self, find_state):
+        """
+        Set of NFA states reachable from some NFA state on e-transitions
+        """
+        stack = [find_state]
         epsilon_closure = set()
-        states = [find_state]
-        while len(states):
-            from_state = states.pop()
-            epsilon_closure.add(from_state)
+        while len(stack): # while stack is not empty
+            from_state = stack.pop()
+            epsilon_closure.add(from_state) # add to e-closure
             if from_state in self.transitions:
                 for to_state in self.transitions[from_state]:
                     if EPSILON in self.transitions[from_state][to_state] and to_state not in epsilon_closure:
-                        states.append(to_state)
+                        stack.append(to_state) # push onto stack
         return epsilon_closure
 
-    def get_move(self, state, skey):
+    def get_move(self, state, symbol) -> set():
+        """
+        Set of NFA states to which there is a transition on input symbol from some state
+        """
         if isinstance(state, int):
             state = [state]
         transition_states = set()
         for s in state:
             if s in self.transitions:
                 for transition in self.transitions[s]:
-                    if skey in self.transitions[s][transition]:
+                    if symbol in self.transitions[s][transition]:
                         transition_states.add(transition)
         return transition_states
 
@@ -108,8 +116,8 @@ class FA:
         fa.attr(rankdir='LR')
 
         fa.attr('node', shape = 'doublecircle')
-        for fst in self.accepting_states:
-            fa.node('s' + str(fst))
+        for state in self.accepting_states:
+            fa.node('s' + str(state))
 
         fa.attr('node', shape = 'circle')
         for from_state, to_states in self.transitions.items():

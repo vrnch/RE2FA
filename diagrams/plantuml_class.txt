@@ -1,44 +1,56 @@
 @startuml
 class FA {
     states : set
-    symbol : set
+    symbols : set
     {field}transitions : defaultdict(defaultdict)
-    startstate : int
-    finalstates : list
-    setStart(state)
-    addFinal(state)
-    addTransition(fromstate, tostate, inputch)
-    addTransition_dict(transitions)
-    newBuildFromNumber(startnum)
-    newBuildFromEqualStates(equivalent, pos)
-    getEpsilonClosure(findstate)
-    getMove(state, skey)
-    display(fname, pname)
+    initial_state : int
+    accepting_states : list
+    set_initial_state(state)
+    add_accepting_states(state)
+    add_transition(from_state, to_state, symbol)
+    add_transition_dict(transitions)
+    rebuild_from_number(start_number) : FA, int
+    rebuild_from_equal_states(equivalent, position) : FA
+    get_epsilon_closure(find_state) : set
+    get_move(state, skey) : set
+    display(fname, pname) 
 }
 
 class Regex2NFA {
     regex : str 
     nfa : FA
-    displayNFA()
-    {static}getPriority(op)
-    {static}basicstruct(inputch)
-    {static}linestruct(a, b)
-    {static}dotstruct(a, b)
-    {static}starstruct(a)
-    buildNFA()
+    display_NFA()
+    {static}get_precedence(operator) : int
+    {static}get_symbol_template(symbol) : FA
+    {static}get_alternation_template(a, b) : FA
+    {static}get_concatenation_template(a, b) : FA
+    {static}get_kleene_closure_template(a) : FA
+    {static}to_postfix(regex) : string
+    {static}get_symbol(regex) : set
+    build_NFA() : FA
 }
 
 class NFA2DFA {
     dfa : FA 
     minDFA : FA 
-    displayDFA()
-    displayminDFA()
-    buildDFA(nfa)
-    reNumber(states, pos)
+    display_DFA() 
+    display_minDFA()
+    build_DFA(nfa) : FA
+    renumber(states, position)
     minimise()
+}
+
+class Digraph {
+    pname : str 
+    filename : str
+    format : str 
+    attr(kw, rankdir, shape)
+    edge(tail_name, head_name, label)
+    view(directory)
 }
 
 FA o-- Regex2NFA
 FA o-- NFA2DFA
+FA ..> Digraph
 
 @enduml

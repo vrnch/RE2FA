@@ -1,0 +1,38 @@
+@startuml
+title NFA to DFA Conversion
+
+participant Main
+participant NFA2DFA
+participant FA
+
+autonumber
+
+Main -> NFA2DFA : init(nfa)
+activate NFA2DFA
+    NFA2DFA -> NFA2DFA : build_DFA(nfa)
+    activate NFA2DFA
+        NFA2DFA -> FA : get_epsilon_closure(states)
+        activate FA
+            loop stack is not empty
+            FA -> FA : pop stack
+            FA -> FA : add to ε-closure
+                loop each state with transitions on ε 
+                    FA -> FA : push stack
+                end                 
+            end
+            FA --> NFA2DFA : ε-closure
+        deactivate FA
+
+        loop there is an unmarked state in transitions
+            NFA2DFA -> NFA2DFA : mark state 
+            loop each input symbol ch 
+                NFA2DFA -> NFA2DFA : unmarked = ε-closure(state, ch) 
+
+                alt transition is unmarked 
+                    NFA2DFA -> NFA2DFA : add unmarked to transitions
+                end 
+            end 
+        end 
+    deactivate NFA2DFA
+deactivate NFA2DFA
+@enduml

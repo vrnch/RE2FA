@@ -2,7 +2,9 @@ from constants import *
 import finite_automata as fa
 
 class Regex2NFA:
-
+    """
+    Regular expression to nondeterministic finite automaton
+    """
     def __init__(self, regex):
         self.regex = regex
         self.build_NFA()
@@ -18,7 +20,7 @@ class Regex2NFA:
             return 2
         elif operator == KLEENE_CLOSURE:
             return 3
-        else:       # left bracket 左括号
+        else:       # left bracket 
             return 0
 
     @staticmethod
@@ -145,7 +147,7 @@ class Regex2NFA:
         
     def build_NFA(self):
         """ 
-        Build ε-NFA from postfix expression
+        Thompson's construction (from postfix regex)
         """ 
         self.automata = list()
         for ch in Regex2NFA.to_postfix(self.regex):

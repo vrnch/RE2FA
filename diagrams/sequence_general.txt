@@ -1,0 +1,88 @@
+@startuml
+title General Sequence Diagram
+
+actor User
+participant Main
+participant Regex2NFA
+participant FA
+participant Digraph
+participant NFA2DFA
+
+autonumber
+User -> Main : run console app
+activate Main
+User -> Main : input regex
+
+group NFA initialization
+Main -> Regex2NFA : init(regex)
+    activate Regex2NFA
+        Regex2NFA -> Regex2NFA : build_NFA()
+        activate Regex2NFA
+            Regex2NFA -> FA : init() 
+        deactivate Regex2NFA
+            activate FA
+                FA --> Regex2NFA : nfa
+            deactivate FA
+    deactivate Regex2NFA
+end
+
+group NFA visualization
+Main -> Regex2NFA : display_NFA()
+    activate Regex2NFA
+        Regex2NFA -> FA : display()
+        activate FA
+            FA --> Digraph : init()
+        deactivate FA
+            activate Digraph
+                Digraph --> User : nfa.gv.png
+            deactivate Digraph
+    deactivate Regex2NFA
+end
+
+group DFA initialization
+Main -> NFA2DFA : init(nfa)
+    activate NFA2DFA
+        NFA2DFA -> NFA2DFA : build_DFA(nfa)
+        activate NFA2DFA
+            NFA2DFA -> FA : init(nfa)
+        deactivate NFA2DFA
+            activate FA
+                FA --> NFA2DFA : dfa
+            deactivate FA
+    deactivate NFA2DFA
+end
+
+group DFA visualization 
+Main -> NFA2DFA : display_DFA()
+    activate NFA2DFA
+        NFA2DFA -> FA : display()
+        activate FA 
+            FA -> Digraph : init()
+            activate Digraph
+                Digraph --> User : dfa.gv.png
+            deactivate Digraph
+        deactivate FA
+    deactivate NFA2DFA
+end
+
+group Minimal DFA initialization
+Main -> NFA2DFA : minimise()
+    activate NFA2DFA
+        NFA2DFA -> NFA2DFA : minDFA
+    deactivate NFA2DFA
+end
+
+group Minimal DFA visualization
+Main -> NFA2DFA : display_minDFA() 
+    activate NFA2DFA
+        NFA2DFA -> FA : display()
+    deactivate NFA2DFA
+        activate FA
+            FA -> Digraph : init()
+        deactivate FA
+            activate Digraph
+                Digraph --> User : mindfa.gv.png
+            deactivate Digraph
+end
+deactivate Main
+@enduml

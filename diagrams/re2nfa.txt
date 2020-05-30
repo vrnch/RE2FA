@@ -1,0 +1,53 @@
+@startuml
+title Regex to NFA Conversion
+
+participant Main
+participant Regex2NFA
+participant FA
+
+autonumber
+
+Main -> Regex2NFA : init(**regex**)
+activate Regex2NFA
+    Regex2NFA -> Regex2NFA : build_NFA()
+    activate Regex2NFA
+        loop ch in postfix regex
+            alt ch is a symbol
+                Regex2NFA -> Regex2NFA : get_symbol_template()
+                activate Regex2NFA
+                    Regex2NFA -> FA : init()
+                    activate FA
+                        FA --> Regex2NFA : symbol_template
+                    deactivate FA
+                deactivate Regex2NFA
+            else ch is alternation
+                Regex2NFA -> Regex2NFA : get_alternation_template()
+                activate Regex2NFA
+                    Regex2NFA -> FA : init()
+                    activate FA
+                        FA --> Regex2NFA : alternation_template
+                    deactivate FA
+                deactivate Regex2NFA
+            else ch is concatenation
+                Regex2NFA -> Regex2NFA : get_concatenation_template()
+                activate Regex2NFA
+                    Regex2NFA -> FA : init()
+                    activate FA
+                        FA --> Regex2NFA : concatenation_template
+                    deactivate FA
+                deactivate Regex2NFA 
+            else ch is kleene closure
+                Regex2NFA -> Regex2NFA : get_kleene_closure_template()
+                activate Regex2NFA
+                    Regex2NFA -> FA : init()
+                    activate FA
+                        FA --> Regex2NFA : kleene_closure_template
+                    deactivate FA
+                deactivate Regex2NFA 
+            end 
+        end
+        Regex2NFA -> Regex2NFA : nfa
+    deactivate Regex2NFA
+deactivate Regex2NFA
+deactivate Regex2NFA
+@enduml

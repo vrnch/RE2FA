@@ -29,40 +29,26 @@ class DFAMinimizer:
         Hopcroft's algorithm, partitioning the DFA states into groups by their behavior.
         """
 
-        number_of_sets = 3 
-        unchecked_partitions = dict(self.partitions)
-        unchecked_partitions_ids = list(unchecked_partitions.keys())
+        new_partition_id = 3 
+        unchecked_partitions_ids = list(self.partitions.keys())
 
         while unchecked_partitions_ids:
-            id = unchecked_partitions_ids.pop()
-            partition_states = unchecked_partitions[id]
+            partition_id = unchecked_partitions_ids.pop()
 
             for symbol in self._dfa.symbols:
 
-                self.distinguished = dict()
+                self._refill_distinguished(self.partitions[partition_id], symbol)           
 
-                for from_state in partition_states:
-                    self._add_state_to_distinguished(symbol, from_state)
+                should_update_partitions = len(self.distinguished) > 1
+                if should_update_partitions:
+                    for dist_partition, dist_states in self.distinguished.items():
+                        #if dist_partition:
+                        self._update_partitions(dist_states, partition_id, new_partition_id)
+                        
+                        unchecked_partitions_ids.append(new_partition_id)
 
+                        new_partition_id += 1
 
-                if len(self.distinguished) > 1:
-                    for k, v in self.distinguished.items():
-                        if k:
-                            for i in v:
-                                self.partitions[id].remove(i)
-                                if number_of_sets in self.partitions:
-                                    self.partitions[number_of_sets] = self.partitions[number_of_sets].union(set([i]))
-                                else:
-                                    self.partitions[number_of_sets] = set([i])
-                            if len(self.partitions[id]) == 0:
-                                self.partitions.pop(id)
-                            for i in v:
-                                self.belongs_to_partition[i] = number_of_sets
-
-                            unchecked_partitions[number_of_sets] = self.partitions[number_of_sets]
-                            unchecked_partitions_ids.append(number_of_sets)
-
-                            number_of_sets += 1
                     break
 
         if len(self.partitions) == len(self.dfa_states):
@@ -71,16 +57,34 @@ class DFAMinimizer:
             DFAMinimizer.renumber(self.dfa_states, self.belongs_to_partition)
             self._min_dfa = self._dfa.rebuild_from_equal_states(self.partitions, self.belongs_to_partition)
 
+    def _update_partitions(self, dist_states, current_partition_id, new_partition_id):
+        # Move states from old partitions to new ones
+        for state in dist_states:
+            self.partitions[current_partition_id].remove(state)
+            DFAMinimizer._add_to_states_dict(self.partitions, new_partition_id, state)
 
-    def _add_state_to_distinguished(self, symbol, from_state):
-        to_state = self.transition_table[from_state][symbol]
+        # Remove empty partitions after update
+        if len(self.partitions[current_partition_id]) == 0:
+            self.partitions.pop(current_partition_id)
+        for state in dist_states:
+            self.belongs_to_partition[state] = new_partition_id
 
-        partition_of_state = self.belongs_to_partition[to_state] if to_state != None else None
-        
-        if partition_of_state in self.distinguished:
-            self.distinguished[partition_of_state].add(from_state)
+
+    def _refill_distinguished(self, partition_states, symbol):
+        self.distinguished = dict()
+
+        for from_state in partition_states:
+            to_state = self.transition_table[from_state][symbol]
+            partition_of_transition = self.belongs_to_partition[to_state] if to_state != None else None
+
+            DFAMinimizer._add_to_states_dict(self.distinguished, partition_of_transition, from_state)
+    
+    @staticmethod
+    def _add_to_states_dict(states_dict, partition_of_state, state):
+        if partition_of_state in states_dict:
+            states_dict[partition_of_state].add(state)
         else:
-            self.distinguished[partition_of_state] = set([from_state])
+            states_dict[partition_of_state] = set([state])
         
 
     def _init_transition_table(self, dfa_states):

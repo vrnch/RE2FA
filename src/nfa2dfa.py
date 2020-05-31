@@ -104,11 +104,11 @@ class NFA2DFA:
                 for from_state in partition_states:
                     to_state = transition_table[from_state][symbol]
 
-                    if to_state == 0:
-                        if 0 in distinguished:
-                            distinguished[0].add(from_state)
+                    if to_state == None: #0
+                        if None in distinguished: #0
+                            distinguished[None].add(from_state)
                         else:
-                            distinguished[0] = set([from_state])
+                            distinguished[None] = set([from_state])
                     else:
                         add_to_distinguished(to_state)
 
@@ -141,26 +141,26 @@ class NFA2DFA:
 
     def _create_transition_table(self, dfa_states):
         """
-        Move(every state, every symbol)
+        Move(every_state, every_symbol)
         """
-        move = dict() # Move(every state, every symbol)
+        move = dict() 
 
         """
         Preprocess the next state that each state can reach via an input symbol
         """
-        for state in dfa_states:
+        for dfa_state in dfa_states:
             for symbol in self._dfa.symbols:
-                if state in move:
-                    if symbol in move[state]:
-                        move[state][symbol] = move[state][symbol].union(self._dfa.get_move(state, symbol))
+                if dfa_state in move:
+                    if symbol in move[dfa_state]:
+                        move[dfa_state][symbol] = move[dfa_state][symbol].union(self._dfa.get_move(dfa_state, symbol))
                     else:
-                        move[state][symbol] = self._dfa.get_move(state, symbol)
+                        move[dfa_state][symbol] = self._dfa.get_move(dfa_state, symbol)
                 else:
-                    move[state] = {symbol : self._dfa.get_move(state, symbol)}
-                if len(move[state][symbol]):
-                    move[state][symbol] = move[state][symbol].pop()
+                    move[dfa_state] = {symbol : self._dfa.get_move(dfa_state, symbol)}
+                if len(move[dfa_state][symbol]):
+                    move[dfa_state][symbol] = move[dfa_state][symbol].pop() # convert symbol from set to int
                 else:
-                    move[state][symbol] = 0
+                    move[dfa_state][symbol] = None # 0
         
         return move
 

@@ -1,5 +1,6 @@
 from regex2nfa import Regex2NFA
 from nfa2dfa import NFA2DFA
+from dfa_minimzer import DFAMinimizer
 
 if __name__ == '__main__':
 
@@ -12,4 +13,6 @@ if __name__ == '__main__':
 
     b = NFA2DFA(a.nfa)
     b.display_DFA()
-    b.display_minDFA()
+    
+    c = DFAMinimizer(b.get_DFA)
+    # c.display_minDFA()
